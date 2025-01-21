@@ -6,4 +6,4 @@ const secretKey = "Sigma123!"; // Dein Passwort
 // Verschlüsselung des Webhooks
 const encryptedWebhook = CryptoJS.AES.encrypt(webhook, secretKey).toString();
 
-console.log("Verschlüsselter Webhook: ", encryptedWebhook);
+console.log("Verschlüsselter Webhook:", encryptedWebhook);
