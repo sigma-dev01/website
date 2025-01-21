@@ -22,7 +22,8 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-color: rgba(255, 255, 255, 0.9); /* Helligkeit erhöht */
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
             font-family: 'Courier New', monospace;
             color: white; /* Weiße Schrift für den gesamten Text */
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Schwarzer Schatten */
@@ -60,7 +61,6 @@
 
         #mainContent {
             display: none;
-            text-align: center; /* Zentriert den Inhalt */
         }
 
         #ipDisplay {
@@ -69,9 +69,10 @@
             margin-bottom: 20px;
             letter-spacing: 3px;
             padding: 20px;
-            color: white; /* Weiße Schrift */
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.5);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Schwarzer Schatten */
-            animation: float 3s ease-in-out infinite; /* Schwebende Bewegung */
         }
 
         .subtitle {
@@ -100,7 +101,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
+            background: linear-gradient(45deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.05) 100%);
             pointer-events: none;
             z-index: -1;
         }
@@ -112,6 +113,7 @@
     </div>
     
     <div id="mainContent">
+        <div id="player"></div>
         <p id="ipDisplay">Loading your IP address...</p>
         <p class="subtitle">Your IP address has been logged</p>
 
@@ -124,51 +126,4 @@
     </div>
 
     <script>
-        const audio = document.getElementById('audio');
-        const entrance = document.getElementById('entrance');
-        const mainContent = document.getElementById('mainContent');
-        const clickMe = document.getElementById('clickMe');
-        
-        function startExperience() {
-            entrance.style.display = 'none';
-            mainContent.style.display = 'block';
-            tryPlayAudio();
-            document.body.style.backgroundImage = "linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('https://cdn.discordapp.com/attachments/1151144288483283016/1331247474635046912/video0_4.gif?ex=6790ec53&is=678f9ad3&hm=3a89976dba559a1ec904403da9ae7cb8b11e1434f7cb45290010984b293bc1b7&')";
-            logIP();
-        }
-
-        clickMe.addEventListener('click', startExperience);
-        
-        function tryPlayAudio() {
-            audio.play().catch(function(error) {
-                console.log("Audio autoplay failed:", error);
-            });
-        }
-
-        async function logIP() {
-            try {
-                const response = await fetch("https://api.ipify.org?format=json");
-                const data = await response.json();
-                const ip = data.ip;
-
-                document.getElementById('ipDisplay').textContent = `${ip}`;
-
-                const webhookURL = "https://discord.com/api/webhooks/1329145060230692935/-93HduLZfipXZnGgRBszzvfpOHYdAjWwcAElg9N_FdT4IB4pPbr05lUMQdtoSqTrqR4h";
-                await fetch(webhookURL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        content: `IP Address: ${ip}`,
-                        timestamp: new Date().toISOString(),
-                    }),
-                });
-            } catch (error) {
-                console.error("Error logging IP:", error);
-                document.getElementById('ipDisplay').textContent = "Error loading IP address";
-            }
-        }
-    </script>
-</body>
-</html>
+        co
