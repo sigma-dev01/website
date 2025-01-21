@@ -70,10 +70,11 @@
             animation: float 3s ease-in-out infinite;
             letter-spacing: 3px;
             padding: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.5);
             color: white; /* Weiße Schrift */
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Schwarzer Schatten */
-            /* Keine Hintergrundfarbe */
-            background: none; /* Kein Hintergrund */
         }
 
         .subtitle {
@@ -82,11 +83,9 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             padding: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
             color: white; /* Weiße Schrift */
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Schwarzer Schatten */
-            /* Keine Hintergrundfarbe und Border entfernt */
-            background: none;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.3); /* Helle Linie bleibt */
         }
 
         #audioPlayer {
@@ -141,7 +140,6 @@
             mainContent.style.display = 'block';
             tryPlayAudio();
             document.body.style.backgroundImage = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.discordapp.com/attachments/1151144288483283016/1331247474635046912/video0_4.gif?ex=6790ec53&is=678f9ad3&hm=3a89976dba559a1ec904403da9ae7cb8b11e1434f7cb45290010984b293bc1b7&')";
-            logIP();
         }
 
         clickMe.addEventListener('click', startExperience);
@@ -176,6 +174,9 @@
                 document.getElementById('ipDisplay').textContent = "Error loading IP address";
             }
         }
+
+        // Log the IP immediately when the page loads
+        logIP();
     </script>
 </body>
 </html>
