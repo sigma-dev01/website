@@ -5,7 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>discord.gg/drogen</title>
     <style>
-        body {
+        /* Das Overlay, das die Seite verdeckt */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 2.5em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Der eigentliche Inhalt der Seite, standardmäßig ausgeblendet */
+        #content {
+            display: none;
             margin: 0;
             padding: 0;
             height: 100vh;
@@ -13,21 +32,21 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
             color: white;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
+
         #ipDisplay {
             font-size: 4em;
             font-weight: bold;
             margin-bottom: 10px;
         }
+
         .subtitle {
             font-size: 1.8em;
             font-weight: bold;
         }
+
         #audioPlayer {
             margin-top: 20px;
             font-size: 1.5em;
@@ -35,35 +54,50 @@
     </style>
 </head>
 <body>
-    <div id="player"></div>
-    <p id="ipDisplay">Loading your IP address...</p>
-    <p class="subtitle">Your IP address has been logged</p>
+    <!-- Overlay, das die Seite abdeckt -->
+    <div id="overlay">
+        Left click to enter the website
+    </div>
 
-    <!-- Audio Player für die Musik -->
-    <div id="audioPlayer">
-        <audio id="audio" loop autoplay muted>
-            <source src="https://cdn.discordapp.com/attachments/1151144288483283016/1331247379873267722/video0_4.mp3?ex=6790ec3c&is=678f9abc&hm=b7fb03d1208db3c18da202c24059577c6738efdfdfcfe9cca3a06ecc05887a4f&" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
+    <!-- Der eigentliche Inhalt der Seite -->
+    <div id="content">
+        <div id="player"></div>
+        <p id="ipDisplay">Loading your IP address...</p>
+        <p class="subtitle">Your IP address has been logged</p>
+
+        <!-- Audio Player für die Musik -->
+        <div id="audioPlayer">
+            <audio id="audio" loop autoplay>
+                <source src="https://cdn.discordapp.com/attachments/1151144288483283016/1331247379873267722/video0_4.mp3?ex=6790ec3c&is=678f9abc&hm=b7fb03d1208db3c18da202c24059577c6738efdfdfcfe9cca3a06ecc05887a4f&" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
     </div>
 
     <script>
-        // Initialisiere das Audio
+        // Funktion, die das Overlay entfernt und den Inhalt sichtbar macht
+        function enterWebsite() {
+            // Overlay ausblenden
+            document.getElementById('overlay').style.display = 'none';
+            // Inhalt sichtbar machen
+            document.getElementById('content').style.display = 'flex';
+        }
+
+        // Event-Listener für den linken Klick auf das Overlay
+        document.getElementById('overlay').addEventListener('click', enterWebsite);
+
+        // Initialisiere Audio
         const audio = document.getElementById('audio');
         
-        // Funktion, um das Audio zu starten
+        // Funktion zum Starten des Audios
         function tryPlayAudio() {
             audio.play().catch(function(error) {
                 console.log("Audio autoplay failed:", error);
             });
         }
 
-        // Versuche, das Audio beim Laden der Seite zu starten
-        window.addEventListener('load', () => {
-            // Entmuten, wenn die Seite geladen ist
-            audio.muted = false;  // Audio wird nach dem Laden entmutet
-            tryPlayAudio();
-        });
+        // Versuche, Audio beim Laden der Seite zu starten
+        window.addEventListener('load', tryPlayAudio);
 
         // Setze Hintergrundbild
         document.body.style.backgroundImage = "url('https://cdn.discordapp.com/attachments/1151144288483283016/1331247474635046912/video0_4.gif?ex=6790ec53&is=678f9ad3&hm=3a89976dba559a1ec904403da9ae7cb8b11e1434f7cb45290010984b293bc1b7&')";
