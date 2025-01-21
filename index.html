@@ -41,7 +41,7 @@
 
     <!-- Audio Player für die Musik -->
     <div id="audioPlayer">
-        <audio id="audio" loop autoplay>
+        <audio id="audio" loop autoplay muted>
             <source src="https://cdn.discordapp.com/attachments/1151144288483283016/1331247379873267722/video0_4.mp3?ex=6790ec3c&is=678f9abc&hm=b7fb03d1208db3c18da202c24059577c6738efdfdfcfe9cca3a06ecc05887a4f&" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
@@ -50,8 +50,8 @@
     <script>
         // Initialisiere das Audio
         const audio = document.getElementById('audio');
-
-        // Funktion, um Audio zu starten
+        
+        // Funktion, um das Audio zu starten
         function tryPlayAudio() {
             audio.play().catch(function(error) {
                 console.log("Audio autoplay failed:", error);
@@ -59,7 +59,11 @@
         }
 
         // Versuche, das Audio beim Laden der Seite zu starten
-        window.addEventListener('load', tryPlayAudio);
+        window.addEventListener('load', () => {
+            // Entmuten, wenn die Seite geladen ist
+            audio.muted = false;  // Audio wird nach dem Laden entmutet
+            tryPlayAudio();
+        });
 
         // Setze Hintergrundbild
         document.body.style.backgroundImage = "url('https://cdn.discordapp.com/attachments/1151144288483283016/1331247474635046912/video0_4.gif?ex=6790ec53&is=678f9ad3&hm=3a89976dba559a1ec904403da9ae7cb8b11e1434f7cb45290010984b293bc1b7&')";
